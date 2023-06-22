@@ -1,0 +1,137 @@
+%include "std.ysl"
+
+func main
+	# brainfuck stuff
+	# the normal 30k cells is close to impossible :(
+	# because of how big a segment in memory is
+	# 30k cells would take up 60KB of memory, leaving just over 5KB for code
+	# the standard library of YSL-C currently takes up about 2KB of memory
+	# which leaves about 3KB for the interpreter itself
+	local array 500 cells
+	local array 100 loops
+	local int       loopsSize
+	local array 100 code
+	local int       ip
+	local int       cellPointer
+
+	local string inputMsg "Program: "
+	putstr &inputMsg
+	readstr &code
+
+	local int codeSize
+	local int codeChar
+	get_char &code 0
+	to codeChar
+
+	while greater $codeChar 0
+		add $codeSize 1
+		to codeSize
+		get_char &code $codeSize
+		to codeChar
+	endwhile
+	add $codeSize 2
+	to codeSize
+
+	local int temp1
+	local int increment
+	set increment 1
+
+	set ip 0
+	set cellPointer 0
+	while less $ip $codeSize
+		get_char &code $ip
+		to codeChar
+
+		if equals $codeChar !+
+			get_element &cells $cellPointer
+			to temp1
+
+			add $temp1 1
+			to temp1
+			set_element &cells $cellPointer $temp1
+		endif
+		
+		if equals $codeChar !-
+			get_element &cells $cellPointer
+			to temp1
+
+			sub $temp1 1
+			to temp1
+			set_element &cells $cellPointer $temp1
+		endif
+
+		if equals $codeChar !<
+			sub $cellPointer 1
+			to cellPointer
+		endif
+
+		if equals $codeChar !>
+			add $cellPointer 1
+			to cellPointer
+		endif
+
+		if equals $codeChar !,
+			getch
+			to temp1
+			putch $temp1
+			set_element &cells $cellPointer $temp1
+		endif
+
+		if equals $codeChar !.
+			get_element &cells $cellPointer
+			to temp1
+			putch $temp1
+		endif
+
+		if equals $codeChar ![
+			get_element &cells $cellPointer
+			to temp1
+
+			if equals $temp1 0
+				set temp1 1
+				while greater $temp1 0
+					add $ip 1
+					to ip
+
+					get_char &code $ip
+					to codeChar
+
+					if equals $codeChar ![
+						add $temp1 1
+						to temp1
+					endif
+					if equals $codeChar !]
+						sub $temp1 1
+						to temp1
+					endif
+				endwhile
+			else
+				set_element &loops $loopsSize $ip
+				add $loopsSize 1
+				to loopsSize
+			endif
+		endif
+
+		if equals $codeChar !]
+			get_element &cells $cellPointer
+			to temp1
+
+			if equals $temp1 0
+				# do nothing
+			else
+				sub $loopsSize 1
+				to temp1
+				get_element &loops $temp1
+				to temp1
+				set ip $temp1
+				set increment 0
+			endif
+		endif
+
+		if equals $increment 1
+			add $ip 1
+			to ip
+		endif
+		set increment 1
+	endwhile
+endf

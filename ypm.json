@@ -1,0 +1,6 @@
+{
+    "binCommand": "nasm -f bin ybf.asm -o ybf.com",
+    "core": "core_x86_16",
+    "libs": [],
+    "name": "ybf"
+}
