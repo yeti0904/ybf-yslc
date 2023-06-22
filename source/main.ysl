@@ -2,17 +2,12 @@
 
 func main
 	# brainfuck stuff
-	# the normal 30k cells is close to impossible :(
-	# because of how big a segment in memory is
-	# 30k cells would take up 60KB of memory, leaving just over 5KB for code
-	# the standard library of YSL-C currently takes up about 2KB of memory
-	# which leaves about 3KB for the interpreter itself
-	local array 500 cells
-	local array 100 loops
-	local int       loopsSize
-	local array 100 code
-	local int       ip
-	local int       cellPointer
+	local array 30000 cells
+	local array 100   loops
+	local int         loopsSize
+	local array 100   code
+	local int         ip
+	local int         cellPointer
 
 	local string inputMsg "Program: "
 	putstr &inputMsg
