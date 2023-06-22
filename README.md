@@ -10,6 +10,6 @@ ypm build
 
 ## Run
 ```
-ypm run
+dosbox ybf.com
 ```
 Then type in a brainfuck program
