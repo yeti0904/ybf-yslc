@@ -129,4 +129,4 @@ func main
 		endif
 		set increment 1
 	endwhile
-endf
+endfunc
